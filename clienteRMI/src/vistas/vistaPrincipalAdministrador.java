@@ -2,11 +2,13 @@ package vistas;
 import clientermi.conexionRMI;
 import vistas.vistaAgregarAsignatura;
 import java.awt.Component;
+import static java.awt.image.ImageObserver.WIDTH;
 import java.rmi.RemoteException;
 import java.util.jar.Attributes.Name;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 public class vistaPrincipalAdministrador extends javax.swing.JFrame {
     private conexionRMI conexion = new conexionRMI();
@@ -16,7 +18,29 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
 
     public vistaPrincipalAdministrador() {
         initComponents();
-       
+        try {
+            
+            String Asignaturas = conexion.getServidor().MostrarAsignaturas();
+            String[] Asignatura = Asignaturas.split(";");
+            
+            //agregar cursos al combobox
+            for(int i = 1; i<Asignatura.length ;i++){
+                jComboBox6.addItem(Asignatura[i]);
+                jComboBox5.addItem(Asignatura[i]);
+                
+            }
+            String Cursos = conexion.getServidor().MostrarCursos();
+            String[] Curso = Cursos.split(";");
+            
+            //agregar cursos al combobox
+            for(int i = 1; i<Curso.length ;i++){
+                jComboBox3.addItem(Curso[i]);
+                jComboBox4.addItem(Curso[i]);
+                
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(vistaPrincipalAdministrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
 
@@ -27,22 +51,16 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
         jTabbedPane4 = new javax.swing.JTabbedPane();
         jPanel7 = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
-        jTextField5 = new javax.swing.JTextField();
         jTextField6 = new javax.swing.JTextField();
         jButton7 = new javax.swing.JButton();
-        jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
         jTextField14 = new javax.swing.JTextField();
-        jComboBox7 = new javax.swing.JComboBox();
-        jLabel9 = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
         jComboBox3 = new javax.swing.JComboBox();
-        jTextField7 = new javax.swing.JTextField();
         jTextField8 = new javax.swing.JTextField();
         jButton8 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jPanel10 = new javax.swing.JPanel();
         jComboBox4 = new javax.swing.JComboBox();
@@ -84,19 +102,12 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Ejemplo Cliente RMI");
 
-        jTabbedPane4.setBackground(new java.awt.Color(0, 0, 255));
         jTabbedPane4.setTabPlacement(javax.swing.JTabbedPane.LEFT);
         jTabbedPane4.setToolTipText("");
 
         jPanel7.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder("Agregar Curso"));
-
-        jTextField5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField5ActionPerformed(evt);
-            }
-        });
 
         jTextField6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -111,19 +122,9 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
             }
         });
 
-        jLabel5.setText("Ingrese el código del curso:");
-
         jLabel6.setText("Ingrese el nombre del curso:");
 
-        jLabel19.setText("Ingrese la nueva capacidad:");
-
-        jComboBox7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox7ActionPerformed(evt);
-            }
-        });
-
-        jLabel9.setText("Seleccione el profesor:");
+        jLabel19.setText("Ingrese capacidad del curso:");
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -132,44 +133,29 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                        .addGap(0, 247, Short.MAX_VALUE)
-                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel19)
-                            .addComponent(jLabel9))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jComboBox7, 0, 163, Short.MAX_VALUE)
-                            .addComponent(jTextField14)
-                            .addComponent(jTextField6)
-                            .addComponent(jTextField5))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel19))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jTextField14, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
+                    .addComponent(jTextField6))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(37, 37, 37)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel19)
-                    .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                    .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel19))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
                 .addComponent(jButton7))
         );
 
@@ -190,8 +176,6 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
 
         jLabel4.setText("Ingrese la nueva capacidad:");
 
-        jLabel3.setText("Ingrese el nuevo codigo:");
-
         jLabel10.setText("Seleccione el curso:");
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
@@ -202,22 +186,16 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel9Layout.createSequentialGroup()
-                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jButton8))
-                            .addGroup(jPanel9Layout.createSequentialGroup()
-                                .addComponent(jLabel10)
-                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton8)
                         .addContainerGap())
                     .addGroup(jPanel9Layout.createSequentialGroup()
-                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jComboBox3, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel10))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField7, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                            .addComponent(jComboBox3, 0, 156, Short.MAX_VALUE)
                             .addComponent(jTextField8))
                         .addGap(45, 45, 45))))
         );
@@ -225,14 +203,10 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel10)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
+                .addGap(46, 46, 46)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
@@ -353,7 +327,7 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
-                .addContainerGap(53, Short.MAX_VALUE)
+                .addContainerGap(56, Short.MAX_VALUE)
                 .addComponent(jButton11)
                 .addGap(73, 73, 73))
             .addGroup(jPanel11Layout.createSequentialGroup()
@@ -368,15 +342,13 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(7, 7, 7)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
@@ -384,12 +356,12 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -438,7 +410,7 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
                 .addContainerGap(79, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel13Layout.setVerticalGroup(
@@ -482,30 +454,27 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
         jPanel14.setLayout(jPanel14Layout);
         jPanel14Layout.setHorizontalGroup(
             jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel14Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jComboBox5, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel14Layout.createSequentialGroup()
-                        .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel15)
-                            .addGroup(jPanel14Layout.createSequentialGroup()
-                                .addGap(5, 5, 5)
-                                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(jPanel14Layout.createSequentialGroup()
-                                        .addComponent(jLabel16)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField11))
-                                    .addGroup(jPanel14Layout.createSequentialGroup()
-                                        .addComponent(jLabel17)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(0, 12, Short.MAX_VALUE)))
-                .addGap(91, 91, 91))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel14Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton15)
                 .addContainerGap())
+            .addGroup(jPanel14Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jComboBox5, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel15)
+                    .addGroup(jPanel14Layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel14Layout.createSequentialGroup()
+                                .addComponent(jLabel16)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel14Layout.createSequentialGroup()
+                                .addComponent(jLabel17)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(103, Short.MAX_VALUE))
         );
         jPanel14Layout.setVerticalGroup(
             jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -552,11 +521,10 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
                 .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel18))
-                .addContainerGap(120, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel15Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton16)
-                .addContainerGap())
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jButton16))
         );
         jPanel15Layout.setVerticalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -565,7 +533,7 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
                 .addComponent(jLabel18)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
                 .addComponent(jButton16))
         );
 
@@ -627,22 +595,23 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
         jPanel16Layout.setHorizontalGroup(
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel16Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jButton18)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(146, 146, 146)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(138, 138, 138)
                 .addComponent(jButton17)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel16Layout.setVerticalGroup(
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(54, Short.MAX_VALUE)
                 .addComponent(jButton17)
                 .addGap(73, 73, 73))
             .addGroup(jPanel16Layout.createSequentialGroup()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton18))
         );
 
@@ -652,15 +621,13 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel12Layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel12Layout.createSequentialGroup()
-                        .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, 360, Short.MAX_VALUE))
-                    .addGroup(jPanel12Layout.createSequentialGroup()
-                        .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel12Layout.setVerticalGroup(
@@ -736,11 +703,47 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton18ActionPerformed
-        // TODO add your handling code here:
+        try {
+            //***************************** Mostrar *********************************************
+            
+            String Asignaturas1 = conexion.getServidor().MostrarAsignaturas();
+            String Asignaturas2 = conexion.getServidor().MostrarAsignaturasSecundaria();          
+            String[] Asign1 = Asignaturas1.split(";");
+            String[] Asign2 = Asignaturas2.split(";");
+            //jTable3.removeRowSelectionInterval(0, Asign1.length);
+            DefaultTableModel model = new DefaultTableModel();
+            model.addColumn("codigo");
+            model.addColumn("Asignatura");
+            //agregar cursos al combobox
+            for(int i = 1; i<Asign1.length ;i++){
+                model.addRow( new String[] { Asign2[i] , Asign1[i] });
+            }
+            jTable3.setModel(model);
+        } catch (RemoteException ex) {
+            Logger.getLogger(vistaPrincipalAdministrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton18ActionPerformed
 
     private void jButton16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton16ActionPerformed
-        // TODO add your handling code here:
+        try {
+            //*********************** ELIMINAR *******************************************
+            String Asignatura = (String) this.jComboBox6.getSelectedItem();
+            conexion.EliminarAsignaturas(Asignatura);
+            String Asignaturas = conexion.getServidor().MostrarAsignaturas();
+            String[] Asign = Asignaturas.split(";");
+            jComboBox6.removeAllItems();
+            jComboBox5.removeAllItems();
+            
+            //agregar cursos al combobox
+            for(int i = 1; i<Asign.length ;i++){
+                jComboBox6.addItem(Asign[i]);
+                jComboBox5.addItem(Asign[i]);
+                
+            }
+            JOptionPane.showMessageDialog(this, "Se eliminó correctamente la asignatura", "Mensaje", JOptionPane.INFORMATION_MESSAGE);                                      
+        } catch (RemoteException ex) {
+            Logger.getLogger(vistaPrincipalAdministrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton16ActionPerformed
 
     private void jComboBox6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox6ActionPerformed
@@ -748,7 +751,39 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox6ActionPerformed
 
     private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
-        // TODO add your handling code here:
+        //************* MODIFICAR *************************************************
+        try {
+         
+            //obtener datos de la asignatura
+            int resultado = 0;
+            String ID = this.jTextField12.getText();
+            String Asignatura = (String) this.jComboBox5.getSelectedItem();
+            String Nombre = this.jTextField11.getText();
+            
+            if(conexion.ModificarAsignaturas(ID,Nombre,Asignatura)==1){
+
+         
+                JOptionPane.showMessageDialog(this, "Se modificó correctamente la asignatura", "Mensaje", JOptionPane.INFORMATION_MESSAGE);                                      
+              //  jComboBox1.setSelectedIndex(-1)
+                this.jTextField11.setText("");
+                this.jTextField12.setText("");
+                String Asignaturas = conexion.getServidor().MostrarAsignaturas();
+                String[] Asign = Asignaturas.split(";");
+                jComboBox6.removeAllItems();
+                jComboBox5.removeAllItems();
+
+                //agregar cursos al combobox
+                for(int i = 1; i<Asign.length ;i++){
+                    jComboBox6.addItem(Asign[i]);
+                    jComboBox5.addItem(Asign[i]);
+                }
+            }else{
+                JOptionPane.showMessageDialog(this, "Ya se encuentra este código en otra asignatura", "Mensaje", JOptionPane.ERROR_MESSAGE);                                      
+            }
+            
+        } catch (RemoteException ex) {
+            Logger.getLogger(vistaPrincipalAdministrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton15ActionPerformed
 
     private void jComboBox5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox5ActionPerformed
@@ -756,7 +791,35 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox5ActionPerformed
 
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
-        // TODO add your handling code here:
+        try {
+            //*/******************************** AGREGAR**********************************************
+            //obtener datos de la asignatura
+            int resultado = 0;
+            String ID = this.jTextField9.getText();
+            String Nombre = this.jTextField10.getText();
+            resultado = conexion.AgregarAsignatura(ID, Nombre);
+
+            if(resultado == 0){
+                JOptionPane.showMessageDialog(this, "La asignatura se encuentra en el sistema", "Mensaje", JOptionPane.ERROR_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this, "Se ha ingresado correctamente la asignatura", "Mensaje", JOptionPane.INFORMATION_MESSAGE);                       
+              //  jComboBox1.setSelectedIndex(-1)
+                this.jTextField10.setText("");
+                this.jTextField9.setText("");
+                String Asignaturas = conexion.getServidor().MostrarAsignaturas();
+                String[] Asign = Asignaturas.split(";");
+                jComboBox5.removeAllItems();
+                jComboBox6.removeAllItems();
+
+                //agregar cursos al combobox
+                for(int i = 1; i<Asign.length ;i++){
+                    jComboBox5.addItem(Asign[i]);
+                    jComboBox6.addItem(Asign[i]);
+                }
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(vistaPrincipalAdministrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton14ActionPerformed
 
     private void jTextField10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField10ActionPerformed
@@ -768,11 +831,56 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField9ActionPerformed
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
-        // TODO add your handling code here:
+        // ****************************  Mostrar Cursos ********************************
+        
+        try {           
+            
+            String Cursos1 = conexion.getServidor().MostrarCursos();
+            String Cursos2 = conexion.getServidor().MostrarCursosSecundario();  
+            String Cursos3 = conexion.getServidor().MostrarCursosTerciarios();  
+            String[] Curs1 = Cursos1.split(";");
+            String[] Curs2 = Cursos2.split(";");
+            String[] Curs3 = Cursos3.split(";");
+            //jTable3.removeRowSelectionInterval(0, Asign1.length);
+            DefaultTableModel model = new DefaultTableModel();
+            model.addColumn("Codigo");
+            model.addColumn("Curso");
+            model.addColumn("Cantidad Alumnos");
+            //agregar cursos al combobox
+            for(int i = 1; i<Curs1.length ;i++){
+                model.addRow( new String[] { Curs2[i] , Curs1[i],Curs3[i] });
+            }
+            jTable2.setModel(model);
+        } catch (RemoteException ex) {
+            Logger.getLogger(vistaPrincipalAdministrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        // TODO add your handling code here:
+        //******************************* Eliminar Cursos************************
+         try {
+           
+            String CursoEliminar = (String) this.jComboBox4.getSelectedItem();
+            int Resultado = conexion.EliminarCursos(CursoEliminar);
+            if(Resultado == 1){
+                String Curs = conexion.getServidor().MostrarCursos();
+                String[] Curso1 = Curs.split(";");
+                jComboBox3.removeAllItems();
+                jComboBox4.removeAllItems();
+
+                //agregar cursos al combobox
+                for(int i = 1; i<Curso1.length ;i++){
+                    jComboBox4.addItem(Curso1[i]);
+                    jComboBox3.addItem(Curso1[i]);
+
+                }
+                JOptionPane.showMessageDialog(this, "Se eliminó correctamente el curso", "Mensaje", JOptionPane.INFORMATION_MESSAGE);                                      
+            }else{
+                JOptionPane.showMessageDialog(this, "No se puede eliminar este curso debido a que existen estudiantes asociados", "Mensaje", JOptionPane.ERROR_MESSAGE);                                      
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(vistaPrincipalAdministrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jComboBox4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox4ActionPerformed
@@ -780,7 +888,30 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox4ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        // TODO add your handling code here:
+        // ***************************** MODIFICAR CURSO *************************************
+        try {
+         
+            //obtener datos de la el curso
+            String CursoActual = (String) this.jComboBox3.getSelectedItem();
+            String Cantidad = this.jTextField8.getText();
+            conexion.ModificarCursos(Cantidad, CursoActual);
+            JOptionPane.showMessageDialog(this, "Se modificó correctamente la cantidad de alumnos del curso", "Mensaje", JOptionPane.INFORMATION_MESSAGE);                                      
+          //  jComboBox1.setSelectedIndex(-1)
+            this.jTextField8.setText("");          
+            String Cursos = conexion.getServidor().MostrarCursos();
+            String[] Curs = Cursos.split(";");
+            jComboBox3.removeAllItems();
+            jComboBox4.removeAllItems();
+
+            //agregar cursos al combobox
+            for(int i = 1; i<Curs.length ;i++){
+                jComboBox4.addItem(Curs[i]);
+                jComboBox3.addItem(Curs[i]);
+            }
+            
+        } catch (RemoteException ex) {
+            Logger.getLogger(vistaPrincipalAdministrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed
@@ -788,20 +919,42 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox3ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
+        // ********************** AGREGAR CURSO*********************************
+        try {
+            
+            //obtener datos de la asignatura
+            int resultado = 0;
+            String Nombre = this.jTextField6.getText();
+            String Cantidad = this.jTextField14.getText();
+            resultado = conexion.AgregarCurso(Cantidad, Nombre);
+
+            if(resultado == 0){
+                JOptionPane.showMessageDialog(this, "El curso se encuentra en el sistema", "Mensaje", JOptionPane.ERROR_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(this, "Se ha ingresado correctamente el curso", "Mensaje", JOptionPane.INFORMATION_MESSAGE);                       
+              //  jComboBox1.setSelectedIndex(-1)
+                this.jTextField6.setText("");
+                this.jTextField14.setText("");
+                String Asignaturas = conexion.getServidor().MostrarCursos();
+                String[] Asign = Asignaturas.split(";");
+                jComboBox3.removeAllItems();
+                jComboBox4.removeAllItems();
+
+                //agregar cursos al combobox
+                for(int i = 1; i<Asign.length ;i++){
+                    jComboBox4.addItem(Asign[i]);
+                    jComboBox3.addItem(Asign[i]);
+                }
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(vistaPrincipalAdministrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField6ActionPerformed
-
-    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField5ActionPerformed
-
-    private void jComboBox7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox7ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox7ActionPerformed
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -820,7 +973,6 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
     private javax.swing.JComboBox jComboBox4;
     private javax.swing.JComboBox jComboBox5;
     private javax.swing.JComboBox jComboBox6;
-    private javax.swing.JComboBox jComboBox7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel13;
@@ -831,11 +983,8 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
@@ -855,9 +1004,7 @@ public class vistaPrincipalAdministrador extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField11;
     private javax.swing.JTextField jTextField12;
     private javax.swing.JTextField jTextField14;
-    private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextField9;
     // End of variables declaration//GEN-END:variables

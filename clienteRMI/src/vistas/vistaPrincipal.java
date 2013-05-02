@@ -11,6 +11,7 @@ public class vistaPrincipal extends javax.swing.JFrame {
     private static vistaPrincipal propiaVista;
     private conexionRMI conexion = new conexionRMI();
     public static String Name;
+    private static String RUT;
 
     
     public vistaPrincipal() {
@@ -171,6 +172,7 @@ public class vistaPrincipal extends javax.swing.JFrame {
     private void ingresar(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ingresar
         //Recuperamos nombre y pass de la vista
         String Nombre = this.TextFieldNombre.getText();
+        this.setRUT(Nombre);
         vistaPrincipal.Name = Nombre;
         String Pass = this.TextFieldPass.getText();
         try {
@@ -207,7 +209,8 @@ public class vistaPrincipal extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
        // Registrar.getInstanciaVista().setVisible(true);
         VistaRegister.getInstanciaVista().setVisible(true);
-       vistaPrincipalAdministrador a = new vistaPrincipalAdministrador();
+       //vistaPrincipalAdministrador a = new vistaPrincipalAdministrador();
+        vistaPrincipalEstudiante a = new vistaPrincipalEstudiante();
        a.setVisible(true);
       
         
@@ -230,5 +233,19 @@ public class vistaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * @return the RUT
+     */
+    public String getRUT() {
+        return RUT;
+    }
+
+    /**
+     * @param RUT the RUT to set
+     */
+    public void setRUT(String RUT) {
+        this.RUT = RUT;
+    }
 
 }

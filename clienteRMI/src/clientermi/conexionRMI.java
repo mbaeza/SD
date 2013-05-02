@@ -64,4 +64,33 @@ public class conexionRMI {
         int resultado = servidor.registrarProfesorEnBD(cliente,Pass, RUT,  Nombre1, Nombre2, FONO, Apell1);
         return resultado;
     }
+     public int AgregarAsignatura(String id,String nombre) throws RemoteException {  
+        int resultado = servidor.AgregarAsignatura( id, nombre);
+        return resultado;
+    }
+     public void EliminarAsignaturas(String NombreAsig) throws RemoteException {
+        servidor.EliminarAsignaturas( NombreAsig);
+    }
+    public int ModificarAsignaturas(String id,String nombre,String asignaturaAModificar)  throws RemoteException {
+        int resultado = servidor.ModificarAsignatura( id, nombre, asignaturaAModificar) ;
+        return resultado;
+    }
+    public int AgregarCurso(String cantidad,String nombre) throws RemoteException {  
+        int resultado = servidor.AgregarCursos( cantidad, nombre);
+        return resultado;
+    }
+    public int EliminarCursos(String NombreCurso) throws RemoteException {
+        int resultado = servidor.EliminarCursos( NombreCurso);
+         return resultado;
+    }
+    public void ModificarCursos(String cantidadCurso,String NombreCursoActual)  throws RemoteException {
+        servidor.ModificarCursos( cantidadCurso, NombreCursoActual) ;
+    }
+    public void AgregarComentario(String comentario,String Alumno,String profesor,String Asunto) throws RemoteException {  
+        servidor. AgregarComentario( comentario, Alumno, profesor, Asunto);
+     
+    }
 }
+    
+       /* public synchronized int AgregarComentario(String comentario,String Alumno,String profesor,String Asunto) throws RemoteException
+*/

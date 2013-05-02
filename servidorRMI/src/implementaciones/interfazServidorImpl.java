@@ -234,6 +234,7 @@ public class interfazServidorImpl extends UnicastRemoteObject implements interfa
         
     }
 public synchronized String MostrarCursos() throws RemoteException{
+    
         Connection conexion;
         String Nombredeloscursos= "";
             try {
@@ -250,7 +251,7 @@ public synchronized String MostrarCursos() throws RemoteException{
                        
                 }
                 if(Nombredeloscursos.equals(""))
-                     Nombredeloscursos = "No hay cursos;";
+                     Nombredeloscursos = "asignaturas;No hay cursos;";
                 
             } catch (SQLException ex) {
                 Logger.getLogger(interfazServidorImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -258,6 +259,152 @@ public synchronized String MostrarCursos() throws RemoteException{
             }
             return Nombredeloscursos;
         }
+public synchronized String MostrarCursosSecundario() throws RemoteException{
+    
+        Connection conexion;
+        String Nombredelasasignaturas= "";
+            try {
+                //Se crea la conexion 
+                conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/colegio", "root", "(markus123)");
+                Statement st = conexion.createStatement();
+                //se hace una consulta
+                ResultSet rs2 =  st.executeQuery ("select ID_CURSO from curso");
+                
+                //Se toman todos los nombres con respeto a la consulta
+                while (rs2.next() ){    
+                    if(!(rs2.getString("ID_CURSO").equals(null)))
+                        Nombredelasasignaturas = Nombredelasasignaturas+";"+rs2.getString("ID_CURSO");                                           
+                       
+                }
+                if(Nombredelasasignaturas.equals(""))
+                     Nombredelasasignaturas = "asignaturas;No hay codigo;";
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(interfazServidorImpl.class.getName()).log(Level.SEVERE, null, ex);
+                
+            }
+            return Nombredelasasignaturas;
+        }
+public synchronized String MostrarCursosTerciarios() throws RemoteException{
+    
+        Connection conexion;
+        String Nombredelasasignaturas= "";
+            try {
+                //Se crea la conexion 
+                conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/colegio", "root", "(markus123)");
+                Statement st = conexion.createStatement();
+                //se hace una consulta
+                ResultSet rs2 =  st.executeQuery ("select CANT_ALUMNO from curso");
+                
+                //Se toman todos los nombres con respeto a la consulta
+                while (rs2.next() ){    
+                    if(!(rs2.getString("CANT_ALUMNO").equals(null)))
+                        Nombredelasasignaturas = Nombredelasasignaturas+";"+rs2.getString("CANT_ALUMNO");                                           
+                       
+                }
+                if(Nombredelasasignaturas.equals(""))
+                     Nombredelasasignaturas = "asignaturas;No hay codigo;";
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(interfazServidorImpl.class.getName()).log(Level.SEVERE, null, ex);
+                
+            }
+            return Nombredelasasignaturas;
+        }
+public synchronized int AgregarCursos(String cantidad,String nombre) throws RemoteException{
+        int resultado = 1;
+        Connection conexion;
+            try {
+                conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/colegio", "root", "(markus123)");
+                Statement st = conexion.createStatement();
+                
+                //verificar que no exista este curso en la BD
+                ResultSet rs =  st.executeQuery ("select * from curso");
+                int a = 0;              
+                int suma = 0;
+                int ID = 0;
+                while (rs.next() ){
+                   if(rs.getString("Nombre_Curso").equals(nombre)){                    
+                       a = 1;
+                       break;
+                   }                    
+                }
+                if(a!=1){
+                    ResultSet buscar =  st.executeQuery ("select * from curso ");
+                    while (buscar.next() ){
+                        if(suma == 0){    
+                            if(buscar.getString("ID_CURSO")!= null)
+                                ID = Integer.parseInt(buscar.getString("ID_CURSO"));
+                            else
+                                ID=0;
+                        }else if(Integer.parseInt(buscar.getString("ID_CURSO"))> ID){
+                            ID = Integer.parseInt(buscar.getString("ID_CURSO"));
+                        }
+                        suma++;
+                     }            
+                    ID++;
+                    st.executeUpdate("INSERT INTO curso (`ID_CURSO`,`Nombre_Curso`,`CANT_ALUMNO`) VALUES ('"+ID+"', '"+nombre+"','"+Integer.parseInt(cantidad)+"');");
+                    resultado = 1;
+                }else{
+                    resultado = 0;
+                }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(interfazServidorImpl.class.getName()).log(Level.SEVERE, null, ex);
+                
+            }
+            return resultado;
+    }
+
+public synchronized int EliminarCursos(String NombreCurso) throws RemoteException{
+        Connection conexion;  
+        int resultado = 0;
+            try {
+                //Se crea la conexion 
+                conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/colegio", "root", "(markus123)");
+                Statement st = conexion.createStatement();
+                //se hace una consulta
+                String cod_curso = "";
+                ResultSet buscar =  st.executeQuery ("select * from curso ");
+                while (buscar.next() ){
+                   if(buscar.getString("Nombre_Curso").equals(NombreCurso)){                    
+                       cod_curso = buscar.getString("ID_CURSO");
+                       break;
+                   }                    
+                }
+                ResultSet rs =  st.executeQuery ("select ID_CURSO from estudiante ");
+                int a = 0;          
+                while (rs.next() ){
+                   if(rs.getString("ID_CURSO").equals(cod_curso)){                    
+                       a = 1;
+                       break;
+                   }                    
+                }
+                if(a!=1){
+                    
+                    st.executeUpdate("DELETE FROM `colegio`.`curso` WHERE `Nombre_Curso`='"+NombreCurso+"';");
+                    resultado = 1;
+                }else{
+                    resultado = 0;
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(interfazServidorImpl.class.getName()).log(Level.SEVERE, null, ex);  
+            }   
+            return resultado;
+                    
+        }
+public synchronized void ModificarCursos(String cantidadCurso,String NombreCursoActual) throws RemoteException{
+        int ID = 0;
+        Connection conexion;
+            try {
+                
+                conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/colegio", "root", "(markus123)");
+                Statement st = conexion.createStatement();
+                st.executeUpdate("UPDATE `colegio`.`curso` SET `CANT_ALUMNO`='"+cantidadCurso+"' WHERE `Nombre_Curso`='"+NombreCursoActual+"';");
+            } catch (SQLException ex) {
+                Logger.getLogger(interfazServidorImpl.class.getName()).log(Level.SEVERE, null, ex);               
+            }  
+}
 
 public synchronized int AgregarAsignatura(String id,String nombre) throws RemoteException{
         int resultado = 1;
@@ -290,6 +437,7 @@ public synchronized int AgregarAsignatura(String id,String nombre) throws Remote
             return resultado;
     }
 public synchronized String MostrarAsignaturas() throws RemoteException{
+    
         Connection conexion;
         String Nombredelasasignaturas= "";
             try {
@@ -306,7 +454,34 @@ public synchronized String MostrarAsignaturas() throws RemoteException{
                        
                 }
                 if(Nombredelasasignaturas.equals(""))
-                     Nombredelasasignaturas = "No hay cursos;";
+                     Nombredelasasignaturas = "asignaturas;No hay asignaturas;";
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(interfazServidorImpl.class.getName()).log(Level.SEVERE, null, ex);
+                
+            }
+            return Nombredelasasignaturas;
+        }
+
+public synchronized String MostrarAsignaturasSecundaria() throws RemoteException{
+    
+        Connection conexion;
+        String Nombredelasasignaturas= "";
+            try {
+                //Se crea la conexion 
+                conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/colegio", "root", "(markus123)");
+                Statement st = conexion.createStatement();
+                //se hace una consulta
+                ResultSet rs2 =  st.executeQuery ("select ID_ASIGNATURA from asignatura");
+                
+                //Se toman todos los nombres con respeto a la consulta
+                while (rs2.next() ){    
+                    if(!(rs2.getString("ID_ASIGNATURA").equals(null)))
+                        Nombredelasasignaturas = Nombredelasasignaturas+";"+rs2.getString("ID_ASIGNATURA");                                           
+                       
+                }
+                if(Nombredelasasignaturas.equals(""))
+                     Nombredelasasignaturas = "asignaturas;No hay codigo;";
                 
             } catch (SQLException ex) {
                 Logger.getLogger(interfazServidorImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -327,8 +502,8 @@ public synchronized void EliminarAsignaturas(String NombreAsig) throws RemoteExc
                 Logger.getLogger(interfazServidorImpl.class.getName()).log(Level.SEVERE, null, ex);  
             }           
         }
-public synchronized void ModificarAsignatura(String id,String nombre,String asignaturaAModificar) throws RemoteException{
-        int ID = 0;
+public synchronized int ModificarAsignatura(String id,String nombre,String asignaturaAModificar) throws RemoteException{
+        int ID = 0,a=0,resultado = 0;
         Connection conexion;
             try {
                 
@@ -337,15 +512,92 @@ public synchronized void ModificarAsignatura(String id,String nombre,String asig
                 ResultSet rs2 =  st.executeQuery ("select * from asignatura");
                 while (rs2.next() ){
                    if(rs2.getString("NOMBRE_ASIGNATURA").equals(asignaturaAModificar)){                    
-                       ID = Integer.parseInt(rs2.getString("ID_CURSO"));
+                       ID = Integer.parseInt(rs2.getString("ID_ASIGNATURA"));
                        break;
                    }                    
                 }
-                st.executeUpdate("UPDATE `colegio`.`asignatura` SET `ID_ASIGNATURA`='"+ID+"' `NOMBRE_ASIGNATURA`='"+asignaturaAModificar+"' WHERE `ID_CURSO`='"+id+"', `NOMBRE_ASIGNATURA`='"+nombre+"');");
+                while (rs2.next() ){
+                   if(rs2.getString("ID_ASIGNATURA").equals(id)){                    
+                       a = 0 ;
+                       break;
+                   }                    
+                }
+                if(a!=1){                       
+                    st.executeUpdate("UPDATE `colegio`.`asignatura` SET `ID_ASIGNATURA`='"+Integer.parseInt(id)+"', `NOMBRE_ASIGNATURA`='"+nombre+"' WHERE `ID_ASIGNATURA`='+"+ID+"';");
+                    resultado = 1;
+                }else{
+                    resultado = 0;
+                }
+                
             } catch (SQLException ex) {
                 Logger.getLogger(interfazServidorImpl.class.getName()).log(Level.SEVERE, null, ex);               
             }  
+            return resultado;
 }
+public synchronized int AgregarComentario(String comentario,String Alumno,String profesor,String Asunto) throws RemoteException{
+        int resultado = 1;
+        Connection conexion;
+            try {
+                conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/colegio", "root", "(markus123)");
+                Statement st = conexion.createStatement();
+                
+                //verificar que no exista este curso en la BD
+                ResultSet rs =  st.executeQuery ("select * from profesor");
+                int rut_pro = 0;    
+            
+                while (rs.next() ){
+                   if(rs.getString("NOMBRE1_PROFESOR").equals(profesor)){                    
+                       rut_pro = Integer.parseInt(rs.getString("RUT_USUARIO"));
+                       break;
+                   }                    
+                }         
+                int ID = 0,suma = 0;
+                ResultSet buscar =  st.executeQuery ("select * from comentario ");
+                    while (buscar.next() ){
+                        if(suma == 0){    
+                            if(buscar.getString("ID_COMENTARIO")!= null)
+                                ID = Integer.parseInt(buscar.getString("ID_COMENTARIO"));
+                            else
+                                ID=0;
+                        }else if(Integer.parseInt(buscar.getString("ID_COMENTARIO"))> ID){
+                            ID = Integer.parseInt(buscar.getString("ID_COMENTARIO"));
+                        }
+                        suma++;
+                     }            
+                    ID++;
+                    st.executeUpdate("INSERT INTO `colegio`.`comentario` (`ID_COMENTARIO`, `PRO_RUT_USUARIO`, `CUERPO_COMENTARIO`, `ASUNTO`, `RUT_USUARIO`)  VALUES ('"+ID+"', '"+rut_pro+"', '"+comentario+"', '"+Asunto+"', '"+Integer.parseInt(Alumno)+"');");              
+            } catch (SQLException ex) {
+                Logger.getLogger(interfazServidorImpl.class.getName()).log(Level.SEVERE, null, ex);
+                
+            }
+            return resultado;
+    }
+public synchronized String MostrarProfesor() throws RemoteException{
+    
+        Connection conexion;
+        String Nombredelasasignaturas= "";
+            try {
+                //Se crea la conexion 
+                conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/colegio", "root", "(markus123)");
+                Statement st = conexion.createStatement();
+                //se hace una consulta
+                ResultSet rs2 =  st.executeQuery ("select NOMBRE1_PROFESOR from profesor");
+                
+                //Se toman todos los nombres con respeto a la consulta
+                while (rs2.next() ){    
+                    if(!(rs2.getString("NOMBRE1_PROFESOR").equals(null)))
+                        Nombredelasasignaturas = Nombredelasasignaturas+";"+rs2.getString("NOMBRE1_PROFESOR");                                           
+                       
+                }
+                if(Nombredelasasignaturas.equals(""))
+                     Nombredelasasignaturas = "asignaturas;No hay profesores;";
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(interfazServidorImpl.class.getName()).log(Level.SEVERE, null, ex);
+                
+            }
+            return Nombredelasasignaturas;
+        }
     }
     
 
